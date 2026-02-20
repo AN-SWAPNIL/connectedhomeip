@@ -24,6 +24,7 @@ chip_test_suite("tests") {
     "TestWiFiPAFAttack.cpp",
     "TestWiFiPAFErrorStr.cpp",
     "TestWiFiPAFLayer.cpp",
+    "TestWiFiPAFRealAttack.cpp",
     "TestWiFiPAFTP.cpp",
   ]
 
