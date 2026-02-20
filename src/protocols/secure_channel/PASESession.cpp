@@ -491,6 +491,24 @@ CHIP_ERROR PASESession::SendPBKDFParamResponse(ByteSpan initiatorRandom, bool in
                                             sizeof(mPBKDFLocalRandomData)));
     ReturnErrorOnFailure(tlvWriter.Put(AsTlvContextTag(PBKDFParamResponseTags::kResponderSessionId), GetLocalSessionId().Value()));
 
+    // ============================================================
+    // ATTACK: GAP_001 - Force Minimum PBKDF Iterations
+    // ============================================================
+    // This simulates a compromised/malicious device that:
+    //   1. Receives PBKDFParamRequest from commissioner
+    //   2. Responds with MINIMUM valid iteration count (1000)
+    //   3. Protocol has NO validation - accepts any value in range
+    //   4. Weakens key derivation from ~100,000 to 1,000 iterations
+    //   5. Makes brute-force of passcode 100x easier
+    // ============================================================
+    mIterationCount = 1000;
+    ChipLogError(SecureChannel, "========================================================");
+    ChipLogError(SecureChannel, "ATTACK GAP_001: Forcing PBKDF iterations to %u", mIterationCount);
+    ChipLogError(SecureChannel, "ATTACK: Should be 1000-100000, using minimum valid value");
+    ChipLogError(SecureChannel, "ATTACK: This weakens key derivation by ~100x");
+    ChipLogError(SecureChannel, "========================================================");
+    // ============================================================
+
     if (!initiatorHasPBKDFParams)
     {
         TLV::TLVType pbkdfParamContainer;
