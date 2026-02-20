@@ -21,6 +21,7 @@ chip_test_suite("tests") {
   output_name = "libWiFiPAFLayerTests"
 
   test_sources = [
+    "TestWiFiPAFAttack.cpp",
     "TestWiFiPAFErrorStr.cpp",
     "TestWiFiPAFLayer.cpp",
     "TestWiFiPAFTP.cpp",
