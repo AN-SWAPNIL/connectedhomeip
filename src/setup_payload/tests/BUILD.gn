@@ -27,6 +27,7 @@ chip_test_suite("tests") {
     "TestManualCode.cpp",
     "TestQRCode.cpp",
     "TestQRCodeTLV.cpp",
+    "TestSection57SecurityProperties.cpp",
     "TestSetupPayload.cpp",
   ]
 
