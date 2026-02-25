@@ -262,6 +262,8 @@ chip_test_suite("tests") {
     "TestConcreteAttributePath.cpp",
     "TestDataModelSerialization.cpp",
     "TestDefaultOTARequestorStorage.cpp",
+    "TestSection11_20_OTASecurity.cpp",
+    "TestRealOTAAttack.cpp",
     "TestDefaultSafeAttributePersistenceProvider.cpp",
     "TestDefaultTermsAndConditionsProvider.cpp",
     "TestDefaultThreadNetworkDirectoryStorage.cpp",
