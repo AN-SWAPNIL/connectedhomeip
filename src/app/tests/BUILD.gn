@@ -243,6 +243,8 @@ chip_test_suite("tests") {
     "TestAclCommand.cpp",
     "TestAclEvent.cpp",
     "TestActionsCluster.cpp",
+    "TestSection10_6_InformationBlocksSecurity.cpp",
+    "TestSection10_6_AttackIntegration.cpp",
     "TestAttributeAccessInterfaceCache.cpp",
     "TestAttributePathExpandIterator.cpp",
     "TestAttributePathParams.cpp",
