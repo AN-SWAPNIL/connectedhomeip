@@ -286,6 +286,7 @@ chip_test_suite("tests") {
     "TestTimeSyncDataProvider.cpp",
     "TestTimedHandler.cpp",
     "TestWriteInteraction.cpp",
+    "TestSection5_2_DoorLockSecurity.cpp",
   ]
 
   cflags = [ "-Wconversion" ]
@@ -301,6 +302,7 @@ chip_test_suite("tests") {
     ":time-sync-data-provider-test-srcs",
     "${chip_root}/src/app",
     "${chip_root}/src/app:attribute-persistence",
+    "${chip_root}/src/app/clusters/door-lock-server",
     "${chip_root}/src/app/common:cluster-objects",
     "${chip_root}/src/app/data-model-provider/tests:encode-decode",
     "${chip_root}/src/app/icd/client:handler",
@@ -372,4 +374,32 @@ chip_test_suite("tests") {
   if (chip_device_platform != "nrfconnect" && chip_device_platform != "fake") {
     test_sources += [ "TestEventLogging.cpp" ]
   }
+}
+
+# Separate E2E attack simulation test for Door Lock — needs door-lock-server.cpp linked
+chip_test_suite("door-lock-e2e-tests") {
+  output_name = "TestSection5_2_DoorLockE2E"
+
+  test_sources = [ "TestSection5_2_DoorLockE2E.cpp" ]
+
+  cflags = [ "-Wconversion" ]
+
+  public_deps = [
+    ":app-test-stubs",
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+  ]
+
+  # Door Lock server source + generated attribute accessors + shim for missing symbols
+  sources = [
+    "${chip_root}/src/app/clusters/door-lock-server/door-lock-server.cpp",
+    "${chip_root}/src/app/clusters/door-lock-server/door-lock-server-callback.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+    "DoorLockE2EShim.cpp",
+  ]
 }
