@@ -286,12 +286,18 @@ chip_test_suite("tests") {
     "TestTimeSyncDataProvider.cpp",
     "TestTimedHandler.cpp",
     "TestWriteInteraction.cpp",
+    # Section 13.7 Security Tests (Threats and Countermeasures)
+    "TestSection13_7_Security.cpp",
+    "TestRealCloneAttack.cpp",
   ]
 
   cflags = [ "-Wconversion" ]
 
   public_deps = [
     ":app-test-stubs",
+    # Dependencies for Section 13.7 tests
+    "${chip_root}/src/credentials",
+    "${chip_root}/src/credentials/tests:cert_test_vectors",
     ":closure-control-test-srcs",
     ":closure-dimension-test-srcs",
     ":ecosystem-information-test-srcs",
