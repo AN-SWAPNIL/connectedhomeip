@@ -215,6 +215,52 @@ source_set("app-test-stubs") {
   ]
 }
 
+# Section 6.13 Content Control — Spec gap tests (TLV-level struct validation)
+chip_test_suite("content-control-spec-tests") {
+  output_name = "TestContentControlSpecGap"
+
+  test_sources = [ "TestContentControlSpecGap.cpp" ]
+
+  cflags = [ "-Wconversion" ]
+
+  public_deps = [
+    ":app-test-stubs",
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+  ]
+}
+
+# Section 6.13 Content Control — E2E attack simulation via REAL ember callbacks
+chip_test_suite("content-control-e2e-tests") {
+  output_name = "TestContentControlE2E"
+
+  test_sources = [ "TestContentControlE2E.cpp" ]
+
+  cflags = [ "-Wconversion" ]
+
+  public_deps = [
+    ":app-test-stubs",
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+  ]
+
+  sources = [
+    "${chip_root}/src/app/clusters/content-control-server/content-control-server.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+    "ContentControlE2EShim.cpp",
+  ]
+}
+
 source_set("closure-control-test-srcs") {
   sources = [
     "${chip_root}/src/app/clusters/closure-control-server/closure-control-cluster-delegate.h",
@@ -255,8 +301,7 @@ chip_test_suite("tests") {
     "TestClosureControlClusterObjects.cpp",
     "TestClosureControlConformance.cpp",
     "TestClosureDimensionCluster.cpp",
-    "TestContentControlAttackSim.cpp",
-    "TestContentControlSpecGap.cpp",
+
     "TestClosureDimensionClusterObjects.cpp",
     "TestCommandHandlerInterfaceRegistry.cpp",
     "TestCommandInteraction.cpp",
