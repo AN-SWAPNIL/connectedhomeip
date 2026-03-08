@@ -31,16 +31,9 @@ using namespace chip::app::Clusters::WindowCovering;
 using chip::app::DataModel::Nullable;
 using chip::Protocols::InteractionModel::Status;
 
-/* Replicate the SDK's bounds-check macros for testing — these are defined in
-   window-covering-server.cpp and are NOT part of the public API, so we
-   reproduce them here using the same logic. */
-#define CHECK_BOUNDS_INVALID(MIN, VAL, MAX) ((VAL < MIN) || (VAL > MAX))
-#define CHECK_BOUNDS_VALID(MIN, VAL, MAX) (!CHECK_BOUNDS_INVALID(MIN, VAL, MAX))
-
-static bool TestIsPercent100thsValid(Percent100ths v)
-{
-    return CHECK_BOUNDS_VALID(WC_PERCENT100THS_MIN_OPEN, v, WC_PERCENT100THS_MAX_CLOSED);
-}
+/* Uses the REAL IsPercent100thsValid() from window-covering-server.h
+ * (declared at lines 118-119).  The function IS part of the public API,
+ * contrary to the original comment. */
 
 namespace {
 
@@ -68,37 +61,37 @@ TEST_F(WindowCoveringSpecGapTest, SDK_BoundsConstant_MinOpen_Is_Zero)
 }
 
 /* ======================================================================
- * Tests 3–8: Bounds-check logic (replicates IsPercent100thsValid)
+ * Tests 3–8: Bounds-check logic (calls REAL IsPercent100thsValid)
  * ====================================================================== */
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Rejects_10001)
 {
-    EXPECT_FALSE(TestIsPercent100thsValid(10001)) << "SPEC GAP: Value 10001 exceeds max 10000; spec has no SHALL for rejection";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(10001))) << "SPEC GAP: Value 10001 exceeds max 10000; spec has no SHALL for rejection";
 }
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Rejects_65535)
 {
-    EXPECT_FALSE(TestIsPercent100thsValid(65535)) << "SPEC GAP: uint16 max (65535) exceeds max 10000";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(65535))) << "SPEC GAP: uint16 max (65535) exceeds max 10000";
 }
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Rejects_50000)
 {
-    EXPECT_FALSE(TestIsPercent100thsValid(50000)) << "Mid-range value 50000 correctly rejected";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(50000))) << "Mid-range value 50000 correctly rejected by REAL SDK function";
 }
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Accepts_10000)
 {
-    EXPECT_TRUE(TestIsPercent100thsValid(10000)) << "Boundary value 10000 (100.00%) must be valid";
+    EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(10000))) << "Boundary value 10000 (100.00%) accepted by REAL SDK function";
 }
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Accepts_Zero)
 {
-    EXPECT_TRUE(TestIsPercent100thsValid(0)) << "Lower boundary 0 (0.00%) must be valid";
+    EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(0))) << "Lower boundary 0 (0.00%) accepted by REAL SDK function";
 }
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Accepts_5000)
 {
-    EXPECT_TRUE(TestIsPercent100thsValid(5000)) << "Mid-range value 5000 (50.00%) must be valid";
+    EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(5000))) << "Mid-range value 5000 (50.00%) accepted by REAL SDK function";
 }
 
 /* ======================================================================

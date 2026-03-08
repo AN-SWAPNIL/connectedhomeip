@@ -32,14 +32,8 @@ using namespace chip::app::Clusters::WindowCovering;
 using chip::app::DataModel::Nullable;
 using chip::Protocols::InteractionModel::Status;
 
-/* Bounds check matching the SDK's IsPercent100thsValid() logic */
-#define CHECK_BOUNDS_INVALID(MIN, VAL, MAX) ((VAL < MIN) || (VAL > MAX))
-#define CHECK_BOUNDS_VALID(MIN, VAL, MAX) (!CHECK_BOUNDS_INVALID(MIN, VAL, MAX))
-
-static bool SimulateIsPercent100thsValid(Percent100ths v)
-{
-    return CHECK_BOUNDS_VALID(WC_PERCENT100THS_MIN_OPEN, v, WC_PERCENT100THS_MAX_CLOSED);
-}
+/* Uses the REAL IsPercent100thsValid() from window-covering-server.h
+ * (declared at lines 118-119).  No reimplementation needed. */
 
 namespace {
 
@@ -230,8 +224,8 @@ TEST_F(WindowCoveringE2EAttackTest, SDK_Mitigation_Blocks_Lift_Attack)
     /* Simulate what the SDK command handler does for GoToLiftPercentage */
     Percent100ths attackPayload = 65534;
 
-    bool sdkAllows = SimulateIsPercent100thsValid(attackPayload);
-    EXPECT_FALSE(sdkAllows) << "SDK mitigation: IsPercent100thsValid(65534) returns false → ConstraintError in command handler";
+    bool sdkAllows = IsPercent100thsValid(attackPayload);
+    EXPECT_FALSE(sdkAllows) << "REAL SDK IsPercent100thsValid(65534) returns false → ConstraintError in command handler";
 
     /* If not blocked, the attribute write would succeed: */
     Status directWrite = Attributes::TargetPositionLiftPercent100ths::Set(kEndpoint, attackPayload);
@@ -242,8 +236,8 @@ TEST_F(WindowCoveringE2EAttackTest, SDK_Mitigation_Blocks_Tilt_Attack)
 {
     Percent100ths attackPayload = 65534;
 
-    bool sdkAllows = SimulateIsPercent100thsValid(attackPayload);
-    EXPECT_FALSE(sdkAllows) << "SDK mitigation: Tilt axis equally protected by IsPercent100thsValid";
+    bool sdkAllows = IsPercent100thsValid(attackPayload);
+    EXPECT_FALSE(sdkAllows) << "REAL SDK IsPercent100thsValid: Tilt axis equally protected";
 }
 
 /* ======================================================================
@@ -253,15 +247,15 @@ TEST_F(WindowCoveringE2EAttackTest, SDK_Mitigation_Blocks_Tilt_Attack)
 TEST_F(WindowCoveringE2EAttackTest, SDK_Mitigation_Boundary_Precision)
 {
     /* 10000 is the last valid value */
-    EXPECT_TRUE(SimulateIsPercent100thsValid(10000)) << "10000 = 100.00% — maximum valid closed position";
+    EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(10000))) << "10000 = 100.00% — maximum valid closed position";
 
     /* 10001 is the first invalid value */
-    EXPECT_FALSE(SimulateIsPercent100thsValid(10001)) << "10001 = 100.01% — first invalid value, blocked by SDK";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(10001))) << "10001 = 100.01% — first invalid value, blocked by REAL SDK";
 
-    /* Common attack values */
-    EXPECT_FALSE(SimulateIsPercent100thsValid(20000));
-    EXPECT_FALSE(SimulateIsPercent100thsValid(32768));
-    EXPECT_FALSE(SimulateIsPercent100thsValid(65534));
+    /* Common attack values — all rejected by REAL IsPercent100thsValid() */
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(20000)));
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(32768)));
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(65534)));
 }
 
 /* ======================================================================
@@ -275,7 +269,7 @@ TEST_F(WindowCoveringE2EAttackTest, Sequential_Attack_All_Blocked)
     for (auto val : attackValues)
     {
         /* SDK command handler would block each value */
-        EXPECT_FALSE(SimulateIsPercent100thsValid(val)) << "SDK blocks attack value " << val;
+        EXPECT_FALSE(IsPercent100thsValid(val)) << "REAL SDK IsPercent100thsValid blocks attack value " << val;
 
         /* But direct attribute write succeeds for all except null sentinel */
         Status st = Attributes::TargetPositionLiftPercent100ths::Set(kEndpoint, val);
@@ -307,7 +301,7 @@ TEST_F(WindowCoveringE2EAttackTest, PartialOverflow_50001_Attack)
     EXPECT_EQ(overflow, 40001u) << "Motor stall: 400.01% beyond physical position, motor burnout risk";
 
     /* SDK would have blocked this */
-    EXPECT_FALSE(SimulateIsPercent100thsValid(50001)) << "SDK mitigation would have prevented this attack";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(50001))) << "REAL SDK IsPercent100thsValid would have prevented this attack";
 }
 
 } // namespace

@@ -11,5 +11,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import("//build_overrides/chip.gni")
+import("${chip_root}/build/chip/chip_test_suite.gni")
+
 group("window-covering-server") {
+}
+
+chip_test_suite("tests") {
+  output_name = "TestWindowCoveringE2E"
+
+  test_sources = [
+    "TestWindowCoveringE2E.cpp",
+    "TestWindowCoveringSpecGap.cpp",
+  ]
+
+  cflags = [ "-Wconversion" ]
+
+  public_deps = [
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+  ]
+
+  sources = [
+    "${chip_root}/src/app/clusters/window-covering-server/window-covering-server.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+    "window_covering_attr_shim.cpp",
+  ]
 }
