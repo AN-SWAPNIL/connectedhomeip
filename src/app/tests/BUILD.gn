@@ -373,3 +373,56 @@ chip_test_suite("tests") {
     test_sources += [ "TestEventLogging.cpp" ]
   }
 }
+
+# Section 2.11 Smoke CO Alarm — Spec gap analysis tests (no server sources needed)
+chip_test_suite("smoke-co-alarm-spec-tests") {
+  output_name = "TestSection2_11_SmokeCoAlarmSecurity"
+
+  test_sources = [ "TestSection2_11_SmokeCoAlarmSecurity.cpp" ]
+
+  cflags = [ "-Wconversion" ]
+
+  public_deps = [
+    ":app-test-stubs",
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+  ]
+
+  # Smoke CO Alarm server header only (for SmokeCoAlarmServer::Instance() etc.)
+  sources = [
+    "${chip_root}/src/app/clusters/smoke-co-alarm-server/smoke-co-alarm-server.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+    "SmokeCoAlarmE2EShim.cpp",
+  ]
+}
+
+# Section 2.11 Smoke CO Alarm — E2E attack simulation tests
+chip_test_suite("smoke-co-alarm-e2e-tests") {
+  output_name = "TestSection2_11_SmokeCoAlarmE2E"
+
+  test_sources = [ "TestSection2_11_SmokeCoAlarmE2E.cpp" ]
+
+  cflags = [ "-Wconversion" ]
+
+  public_deps = [
+    ":app-test-stubs",
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+  ]
+
+  sources = [
+    "${chip_root}/src/app/clusters/smoke-co-alarm-server/smoke-co-alarm-server.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+    "SmokeCoAlarmE2EShim.cpp",
+  ]
+}
