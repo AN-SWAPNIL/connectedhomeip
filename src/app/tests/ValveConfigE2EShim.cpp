@@ -193,10 +193,7 @@ public:
         // no-op
     }
 
-    CHIP_ERROR ScheduleWork(chip::System::TimerCompleteCallback aComplete, void * aAppState) override
-    {
-        return CHIP_NO_ERROR;
-    }
+    CHIP_ERROR ScheduleWork(chip::System::TimerCompleteCallback aComplete, void * aAppState) override { return CHIP_NO_ERROR; }
 };
 
 NoOpSystemLayer gNoOpSystemLayer;

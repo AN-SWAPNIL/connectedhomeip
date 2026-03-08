@@ -45,17 +45,17 @@ extern void ResetTestAttributeStore();
 
 // Attribute IDs for MockNodeConfig
 static constexpr AttributeId kOpenDurationId        = 0x0000;
-static constexpr AttributeId kDefaultOpenDurationId  = 0x0001;
-static constexpr AttributeId kAutoCloseTimeId        = 0x0002;
-static constexpr AttributeId kRemainingDurationId    = 0x0003;
-static constexpr AttributeId kCurrentStateId         = 0x0004;
-static constexpr AttributeId kTargetStateId          = 0x0005;
-static constexpr AttributeId kCurrentLevelId         = 0x0006;
-static constexpr AttributeId kTargetLevelId          = 0x0007;
-static constexpr AttributeId kDefaultOpenLevelId     = 0x0008;
-static constexpr AttributeId kValveFaultId           = 0x0009;
-static constexpr AttributeId kFeatureMapId           = 0xFFFC;
-static constexpr AttributeId kClusterRevisionId      = 0xFFFD;
+static constexpr AttributeId kDefaultOpenDurationId = 0x0001;
+static constexpr AttributeId kAutoCloseTimeId       = 0x0002;
+static constexpr AttributeId kRemainingDurationId   = 0x0003;
+static constexpr AttributeId kCurrentStateId        = 0x0004;
+static constexpr AttributeId kTargetStateId         = 0x0005;
+static constexpr AttributeId kCurrentLevelId        = 0x0006;
+static constexpr AttributeId kTargetLevelId         = 0x0007;
+static constexpr AttributeId kDefaultOpenLevelId    = 0x0008;
+static constexpr AttributeId kValveFaultId          = 0x0009;
+static constexpr AttributeId kFeatureMapId          = 0xFFFC;
+static constexpr AttributeId kClusterRevisionId     = 0xFFFD;
 
 // Build a MockNodeConfig with the Valve Configuration cluster
 static MockNodeConfig ValveTestConfig()
