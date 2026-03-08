@@ -373,3 +373,55 @@ chip_test_suite("tests") {
     test_sources += [ "TestEventLogging.cpp" ]
   }
 }
+
+# Section 1.8 Boolean State Configuration — Spec gap analysis tests
+chip_test_suite("boolean-state-config-spec-tests") {
+  output_name = "TestSection1_8_BooleanStateConfigSecurity"
+
+  test_sources = [ "TestSection1_8_BooleanStateConfigSecurity.cpp" ]
+
+  cflags = [ "-Wconversion" ]
+
+  public_deps = [
+    ":app-test-stubs",
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+  ]
+
+  sources = [
+    "${chip_root}/src/app/clusters/boolean-state-configuration-server/boolean-state-configuration-cluster.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+    "BooleanStateConfigE2EShim.cpp",
+  ]
+}
+
+# Section 1.8 Boolean State Configuration — E2E attack simulation tests
+chip_test_suite("boolean-state-config-e2e-tests") {
+  output_name = "TestSection1_8_BooleanStateConfigE2E"
+
+  test_sources = [ "TestSection1_8_BooleanStateConfigE2E.cpp" ]
+
+  cflags = [ "-Wconversion" ]
+
+  public_deps = [
+    ":app-test-stubs",
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+  ]
+
+  sources = [
+    "${chip_root}/src/app/clusters/boolean-state-configuration-server/boolean-state-configuration-cluster.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+    "BooleanStateConfigE2EShim.cpp",
+  ]
+}
