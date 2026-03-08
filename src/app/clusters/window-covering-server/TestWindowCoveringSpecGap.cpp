@@ -66,7 +66,8 @@ TEST_F(WindowCoveringSpecGapTest, SDK_BoundsConstant_MinOpen_Is_Zero)
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Rejects_10001)
 {
-    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(10001))) << "SPEC GAP: Value 10001 exceeds max 10000; spec has no SHALL for rejection";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(10001)))
+        << "SPEC GAP: Value 10001 exceeds max 10000; spec has no SHALL for rejection";
 }
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Rejects_65535)
@@ -76,12 +77,14 @@ TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Rejects_65535)
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Rejects_50000)
 {
-    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(50000))) << "Mid-range value 50000 correctly rejected by REAL SDK function";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(50000)))
+        << "Mid-range value 50000 correctly rejected by REAL SDK function";
 }
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Accepts_10000)
 {
-    EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(10000))) << "Boundary value 10000 (100.00%) accepted by REAL SDK function";
+    EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(10000)))
+        << "Boundary value 10000 (100.00%) accepted by REAL SDK function";
 }
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Accepts_Zero)
@@ -91,7 +94,8 @@ TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Accepts_Zero)
 
 TEST_F(WindowCoveringSpecGapTest, BoundsCheck_Accepts_5000)
 {
-    EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(5000))) << "Mid-range value 5000 (50.00%) accepted by REAL SDK function";
+    EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(5000)))
+        << "Mid-range value 5000 (50.00%) accepted by REAL SDK function";
 }
 
 /* ======================================================================

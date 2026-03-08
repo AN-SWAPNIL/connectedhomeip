@@ -250,7 +250,8 @@ TEST_F(WindowCoveringE2EAttackTest, SDK_Mitigation_Boundary_Precision)
     EXPECT_TRUE(IsPercent100thsValid(static_cast<Percent100ths>(10000))) << "10000 = 100.00% — maximum valid closed position";
 
     /* 10001 is the first invalid value */
-    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(10001))) << "10001 = 100.01% — first invalid value, blocked by REAL SDK";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(10001)))
+        << "10001 = 100.01% — first invalid value, blocked by REAL SDK";
 
     /* Common attack values — all rejected by REAL IsPercent100thsValid() */
     EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(20000)));
@@ -301,7 +302,8 @@ TEST_F(WindowCoveringE2EAttackTest, PartialOverflow_50001_Attack)
     EXPECT_EQ(overflow, 40001u) << "Motor stall: 400.01% beyond physical position, motor burnout risk";
 
     /* SDK would have blocked this */
-    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(50001))) << "REAL SDK IsPercent100thsValid would have prevented this attack";
+    EXPECT_FALSE(IsPercent100thsValid(static_cast<Percent100ths>(50001)))
+        << "REAL SDK IsPercent100thsValid would have prevented this attack";
 }
 
 } // namespace

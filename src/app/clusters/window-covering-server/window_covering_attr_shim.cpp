@@ -37,8 +37,7 @@ void WindowCoveringTestShim::Reset()
 // ---------------------------------------------------------------------------
 // emberAfReadAttribute — reads from in-memory map (zeroed if unwritten)
 // ---------------------------------------------------------------------------
-Status emberAfReadAttribute(EndpointId endpoint, ClusterId cluster, AttributeId attributeID, uint8_t * dataPtr,
-                            uint16_t readLength)
+Status emberAfReadAttribute(EndpointId endpoint, ClusterId cluster, AttributeId attributeID, uint8_t * dataPtr, uint16_t readLength)
 {
     auto key = std::make_tuple(endpoint, cluster, attributeID);
     auto it  = sAttributeStore.find(key);
