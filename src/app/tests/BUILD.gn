@@ -373,3 +373,47 @@ chip_test_suite("tests") {
     test_sources += [ "TestEventLogging.cpp" ]
   }
 }
+
+# ─────────────────────────────────────────────────────────────────────────
+# Section 4.6: Valve Configuration — Spec-gap tests
+# ─────────────────────────────────────────────────────────────────────────
+chip_test_suite("valve-config-spec-tests") {
+  output_name = "libValveConfigSpecTests"
+
+  test_sources = [ "TestSection4_6_ValveConfigSecurity.cpp" ]
+
+  public_deps = [
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+    "${chip_root}/src/lib/support/tests:pw-test-macros",
+  ]
+}
+
+# ─────────────────────────────────────────────────────────────────────────
+# Section 4.6: Valve Configuration — E2E Attack Simulation
+# ─────────────────────────────────────────────────────────────────────────
+chip_test_suite("valve-config-e2e-tests") {
+  output_name = "libValveConfigE2ETests"
+
+  test_sources = [ "TestSection4_6_ValveConfigE2E.cpp" ]
+
+  sources = [
+    "ValveConfigE2EShim.cpp",
+    "${chip_root}/src/app/clusters/valve-configuration-and-control-server/valve-configuration-and-control-cluster.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+  ]
+
+  public_deps = [
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/app/util/mock:mock_codegen_data_model",
+    "${chip_root}/src/app/util/mock:mock_ember",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+    "${chip_root}/src/lib/support/tests:pw-test-macros",
+  ]
+}
