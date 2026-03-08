@@ -215,6 +215,45 @@ source_set("app-test-stubs") {
   ]
 }
 
+# --- Section 4.3 Thermostat spec-gap tests ---
+source_set("thermostat-e2e-shim") {
+  sources = [
+    "ThermostatE2EShim.cpp",
+    "${chip_root}/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp",
+  ]
+  public_deps = [
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/lib/core",
+  ]
+}
+
+chip_test_suite("thermostat-spec-tests") {
+  output_name = "TestSection4_3_ThermostatSecurity"
+  test_sources = [ "TestSection4_3_ThermostatSecurity.cpp" ]
+  public_deps = [
+    ":thermostat-e2e-shim",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+    "${chip_root}/src/lib/support/tests:pw-test-macros",
+  ]
+}
+
+chip_test_suite("thermostat-e2e-tests") {
+  output_name = "TestSection4_3_ThermostatE2E"
+  test_sources = [ "TestSection4_3_ThermostatE2E.cpp" ]
+  public_deps = [
+    ":thermostat-e2e-shim",
+    "${chip_root}/src/app/common:cluster-objects",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support:testing",
+    "${chip_root}/src/lib/support/tests:pw-test-macros",
+  ]
+}
+
 source_set("closure-control-test-srcs") {
   sources = [
     "${chip_root}/src/app/clusters/closure-control-server/closure-control-cluster-delegate.h",
