@@ -32,8 +32,8 @@
 
 #include <gtest/gtest.h>
 
-#include <app/clusters/energy-evse-server/energy-evse-server.h>
 #include <app/CommandHandlerInterface.h>
+#include <app/clusters/energy-evse-server/energy-evse-server.h>
 #include <clusters/EnergyEvse/ClusterId.h>
 #include <clusters/EnergyEvse/Commands.h>
 #include <clusters/EnergyEvse/Metadata.h>
@@ -232,10 +232,8 @@ TEST(TestEnergyEvseSpecGap, DISPROVED_031_RandomizationDelayWindowManageProtecte
 {
     using namespace Attributes;
 
-    EXPECT_EQ(UserMaximumChargeCurrent::kMetadataEntry.GetWritePrivilege(),
-              std::make_optional(Access::Privilege::kManage));
-    EXPECT_EQ(RandomizationDelayWindow::kMetadataEntry.GetWritePrivilege(),
-              std::make_optional(Access::Privilege::kManage));
+    EXPECT_EQ(UserMaximumChargeCurrent::kMetadataEntry.GetWritePrivilege(), std::make_optional(Access::Privilege::kManage));
+    EXPECT_EQ(RandomizationDelayWindow::kMetadataEntry.GetWritePrivilege(), std::make_optional(Access::Privilege::kManage));
 }
 
 /**

@@ -41,20 +41,20 @@
 
 #include <gtest/gtest.h>
 
-#include <app/clusters/energy-evse-server/energy-evse-server.h>
+#include <access/SubjectDescriptor.h>
 #include <app/CommandHandler.h>
 #include <app/CommandHandlerInterface.h>
 #include <app/ConcreteCommandPath.h>
 #include <app/SafeAttributePersistenceProvider.h>
+#include <app/clusters/energy-evse-server/energy-evse-server.h>
 #include <app/data-model/Encode.h>
 #include <app/util/mock/Functions.h>
 #include <app/util/mock/MockNodeConfig.h>
 #include <clusters/EnergyEvse/ClusterId.h>
 #include <clusters/EnergyEvse/Commands.h>
 #include <clusters/EnergyEvse/Enums.h>
-#include <lib/core/TLV.h>
 #include <lib/core/DataModelTypes.h>
-#include <access/SubjectDescriptor.h>
+#include <lib/core/TLV.h>
 #include <messaging/ExchangeContext.h>
 
 using namespace chip;
@@ -71,33 +71,33 @@ static constexpr EndpointId kTestEndpoint = 1;
 
 class MockEnergyEvseDelegate : public EnergyEvse::Delegate
 {
-    StateEnum mState                                           = StateEnum::kNotPluggedIn;
-    SupplyStateEnum mSupplyState                               = SupplyStateEnum::kDisabled;
-    FaultStateEnum mFaultState                                 = FaultStateEnum::kNoError;
-    DataModel::Nullable<uint32_t> mChargingEnabledUntil        = DataModel::NullNullable;
-    DataModel::Nullable<uint32_t> mDischargingEnabledUntil     = DataModel::NullNullable;
-    int64_t mCircuitCapacity                                   = 32000;   // 32A
-    int64_t mMinimumChargeCurrent                              = 6000;    // 6A
-    int64_t mMaximumChargeCurrent                              = 0;
-    int64_t mMaximumDischargeCurrent                           = 0;
-    int64_t mUserMaximumChargeCurrent                          = 0;
-    uint32_t mRandomizationDelayWindow                         = 600;
-    DataModel::Nullable<uint32_t> mNextChargeStartTime         = DataModel::NullNullable;
-    DataModel::Nullable<uint32_t> mNextChargeTargetTime        = DataModel::NullNullable;
-    DataModel::Nullable<int64_t> mNextChargeRequiredEnergy     = DataModel::NullNullable;
-    DataModel::Nullable<Percent> mNextChargeTargetSoC          = DataModel::NullNullable;
-    DataModel::Nullable<uint16_t> mApproximateEVEfficiency     = DataModel::NullNullable;
-    DataModel::Nullable<Percent> mStateOfCharge                = DataModel::NullNullable;
-    DataModel::Nullable<int64_t> mBatteryCapacity              = DataModel::NullNullable;
-    DataModel::Nullable<uint32_t> mSessionID                   = DataModel::NullNullable;
-    DataModel::Nullable<uint32_t> mSessionDuration             = DataModel::NullNullable;
-    DataModel::Nullable<int64_t> mSessionEnergyCharged         = DataModel::NullNullable;
-    DataModel::Nullable<int64_t> mSessionEnergyDischarged      = DataModel::NullNullable;
+    StateEnum mState                                       = StateEnum::kNotPluggedIn;
+    SupplyStateEnum mSupplyState                           = SupplyStateEnum::kDisabled;
+    FaultStateEnum mFaultState                             = FaultStateEnum::kNoError;
+    DataModel::Nullable<uint32_t> mChargingEnabledUntil    = DataModel::NullNullable;
+    DataModel::Nullable<uint32_t> mDischargingEnabledUntil = DataModel::NullNullable;
+    int64_t mCircuitCapacity                               = 32000; // 32A
+    int64_t mMinimumChargeCurrent                          = 6000;  // 6A
+    int64_t mMaximumChargeCurrent                          = 0;
+    int64_t mMaximumDischargeCurrent                       = 0;
+    int64_t mUserMaximumChargeCurrent                      = 0;
+    uint32_t mRandomizationDelayWindow                     = 600;
+    DataModel::Nullable<uint32_t> mNextChargeStartTime     = DataModel::NullNullable;
+    DataModel::Nullable<uint32_t> mNextChargeTargetTime    = DataModel::NullNullable;
+    DataModel::Nullable<int64_t> mNextChargeRequiredEnergy = DataModel::NullNullable;
+    DataModel::Nullable<Percent> mNextChargeTargetSoC      = DataModel::NullNullable;
+    DataModel::Nullable<uint16_t> mApproximateEVEfficiency = DataModel::NullNullable;
+    DataModel::Nullable<Percent> mStateOfCharge            = DataModel::NullNullable;
+    DataModel::Nullable<int64_t> mBatteryCapacity          = DataModel::NullNullable;
+    DataModel::Nullable<uint32_t> mSessionID               = DataModel::NullNullable;
+    DataModel::Nullable<uint32_t> mSessionDuration         = DataModel::NullNullable;
+    DataModel::Nullable<int64_t> mSessionEnergyCharged     = DataModel::NullNullable;
+    DataModel::Nullable<int64_t> mSessionEnergyDischarged  = DataModel::NullNullable;
 
-    uint32_t mDisableCallCount            = 0;
-    uint32_t mEnableChargingCallCount     = 0;
-    uint32_t mEnableDischargingCallCount  = 0;
-    uint32_t mStartDiagnosticsCallCount   = 0;
+    uint32_t mDisableCallCount           = 0;
+    uint32_t mEnableChargingCallCount    = 0;
+    uint32_t mEnableDischargingCallCount = 0;
+    uint32_t mStartDiagnosticsCallCount  = 0;
 
 public:
     // --- Command handlers ---
@@ -111,8 +111,7 @@ public:
         return Status::Success;
     }
 
-    Status EnableCharging(const DataModel::Nullable<uint32_t> & enableChargeTime,
-                          const int64_t & minimumChargeCurrent,
+    Status EnableCharging(const DataModel::Nullable<uint32_t> & enableChargeTime, const int64_t & minimumChargeCurrent,
                           const int64_t & maximumChargeCurrent) override
     {
         mEnableChargingCallCount++;
@@ -241,8 +240,7 @@ public:
         return CHIP_NO_ERROR;
     }
 
-    void AddStatus(const ConcreteCommandPath & aRequestCommandPath,
-                   const Protocols::InteractionModel::ClusterStatusCode & aStatus,
+    void AddStatus(const ConcreteCommandPath & aRequestCommandPath, const Protocols::InteractionModel::ClusterStatusCode & aStatus,
                    const char * context = nullptr) override
     {
         lastStatus = aStatus.GetStatus();
@@ -258,8 +256,7 @@ public:
 
     void AddResponse(const ConcreteCommandPath & aRequestCommandPath, CommandId aResponseCommandId,
                      const DataModel::EncodableToTLV & aEncodable) override
-    {
-    }
+    {}
 
     bool IsTimedInvoke() const override { return false; }
 
@@ -291,8 +288,7 @@ public:
 
 // ===== TLV Encode Helpers =====
 
-static void EncodeDisable(const Commands::Disable::Type & cmd,
-                          uint8_t * buffer, size_t bufSize, TLV::TLVReader & reader)
+static void EncodeDisable(const Commands::Disable::Type & cmd, uint8_t * buffer, size_t bufSize, TLV::TLVReader & reader)
 {
     TLV::TLVWriter writer;
     writer.Init(buffer, bufSize);
@@ -301,8 +297,8 @@ static void EncodeDisable(const Commands::Disable::Type & cmd,
     ASSERT_EQ(reader.Next(), CHIP_NO_ERROR);
 }
 
-static void EncodeEnableCharging(const Commands::EnableCharging::Type & cmd,
-                                 uint8_t * buffer, size_t bufSize, TLV::TLVReader & reader)
+static void EncodeEnableCharging(const Commands::EnableCharging::Type & cmd, uint8_t * buffer, size_t bufSize,
+                                 TLV::TLVReader & reader)
 {
     TLV::TLVWriter writer;
     writer.Init(buffer, bufSize);
@@ -311,8 +307,8 @@ static void EncodeEnableCharging(const Commands::EnableCharging::Type & cmd,
     ASSERT_EQ(reader.Next(), CHIP_NO_ERROR);
 }
 
-static void EncodeStartDiagnostics(const Commands::StartDiagnostics::Type & cmd,
-                                   uint8_t * buffer, size_t bufSize, TLV::TLVReader & reader)
+static void EncodeStartDiagnostics(const Commands::StartDiagnostics::Type & cmd, uint8_t * buffer, size_t bufSize,
+                                   TLV::TLVReader & reader)
 {
     TLV::TLVWriter writer;
     writer.Init(buffer, bufSize);
@@ -321,8 +317,8 @@ static void EncodeStartDiagnostics(const Commands::StartDiagnostics::Type & cmd,
     ASSERT_EQ(reader.Next(), CHIP_NO_ERROR);
 }
 
-static void EncodeEnableDischarging(const Commands::EnableDischarging::Type & cmd,
-                                    uint8_t * buffer, size_t bufSize, TLV::TLVReader & reader)
+static void EncodeEnableDischarging(const Commands::EnableDischarging::Type & cmd, uint8_t * buffer, size_t bufSize,
+                                    TLV::TLVReader & reader)
 {
     TLV::TLVWriter writer;
     writer.Init(buffer, bufSize);
@@ -346,9 +342,8 @@ protected:
 
         // Features: ChargingPreferences + V2X + StartDiagnostics support
         BitMask<Feature> features(Feature::kChargingPreferences, Feature::kV2x);
-        BitMask<OptionalAttributes> optAttrs(
-            OptionalAttributes::kSupportsUserMaximumChargingCurrent,
-            OptionalAttributes::kSupportsRandomizationWindow);
+        BitMask<OptionalAttributes> optAttrs(OptionalAttributes::kSupportsUserMaximumChargingCurrent,
+                                             OptionalAttributes::kSupportsRandomizationWindow);
         BitMask<OptionalCommands> optCmds(OptionalCommands::kSupportsStartDiagnostics);
 
         mInstance = new EnergyEvse::Instance(kTestEndpoint, mDelegate, features, optAttrs, optCmds);
