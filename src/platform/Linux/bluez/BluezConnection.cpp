@@ -121,7 +121,7 @@ CHIP_ERROR BluezConnection::Init(const BluezEndpoint & aEndpoint)
                 mC1.reset(chr.release());
             }
             else if (strcmp(bluez_gatt_characteristic1_get_uuid(chr.get()), Ble::CHIP_BLE_CHAR_2_UUID_STR) == 0 &&
-                     BluezIsFlagOnChar(chr.get(), "indicate"))
+                    ( BluezIsFlagOnChar(chr.get(), "indicate") || BluezIsFlagOnChar(chr.get(), "notify") ))
             {
                 ChipLogDetail(DeviceLayer, "Valid C2 characteristic found");
                 mC2.reset(chr.release());
